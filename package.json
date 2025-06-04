@@ -1,0 +1,66 @@
+{
+  "name": "vscode-nextjs-component-boundary-visualizer",
+  "displayName": "Next.js Component Boundary Visualizer",
+  "description": "Visualizes and distinguishes between server, client, and universal (shared) components in Next.js App Router projects.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "*"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Next.js Component Boundary Visualizer",
+      "properties": {
+        "nextjsComponentBoundaryVisualizer.tsconfigPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to tsconfig.json (absolute or workspace-relative). If empty, <project root>/tsconfig.json is used."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "rm -rf out/ && tsc -p .",
+    "test": "vitest --run"
+  },
+  "devDependencies": {
+    "@types/node": "18.x",
+    "@types/vscode": "^1.100.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-electron": "^2.3.6",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "typescript": "^5.2.2",
+    "vitest": "3.2.1"
+  },
+  "dependencies": {
+    "ts-morph": "^26.0.0"
+  },
+  "keywords": [
+    "nextjs",
+    "next.js",
+    "component",
+    "boundary",
+    "visualizer",
+    "server",
+    "client",
+    "universal",
+    "app router",
+    "vscode-extension",
+    "typescript",
+    "dependency graph",
+    "visualization"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/makotot/vscode-nextjs-component-boundary-visualizer.git"
+  }
+}
