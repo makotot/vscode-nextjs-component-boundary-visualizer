@@ -10,7 +10,9 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onLanguage:typescript",
+    "onLanguage:typescriptreact",
+    "workspaceContains:tsconfig.json"
   ],
   "main": "./out/extension.js",
   "contributes": {
