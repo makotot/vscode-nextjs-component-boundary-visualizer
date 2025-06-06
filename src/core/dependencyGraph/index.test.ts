@@ -111,6 +111,17 @@ describe('DependencyGraph', function () {
                 'importer.tsx': 'import { U } from "./Upper"; export const I = 1;'
             },
             expect: { 'Upper.tsx': 'server', 'importer.tsx': 'server' }
+        },
+        {
+            name: 're-exported dependency from index.ts with use client',
+            files: {
+                'index.ts': '"use client"; export * from "./Button";',
+                'Button.tsx': 'export const Button = () => null;'
+            },
+            expect: {
+                'index.ts': 'client',
+                'Button.tsx': 'client'
+            }
         }
     ];
 

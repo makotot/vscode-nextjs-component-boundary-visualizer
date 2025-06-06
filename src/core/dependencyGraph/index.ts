@@ -27,6 +27,11 @@ function logDebug(...args: any[]) {
     }
 }
 
+// Returns true if the file should be excluded from analysis (config, d.ts, test, spec, stories, __mocks__)
+function isExcludedFile(filePath: string): boolean {
+    return /\.(stories|config|d|test|spec)\.(ts|tsx)$|__mocks__/.test(filePath);
+}
+
 /**
  * Builds and manages the dependency graph for a Next.js App Router project.
  * UI components should use this class to retrieve file type information.
@@ -104,6 +109,7 @@ export class DependencyGraph {
             // Only add files if not already present (avoid full remove/add cycle)
             const existingFiles = new Set(this.project.getSourceFiles().map(sf => sf.getFilePath().toString()));
             const glob = [
+                path.join(this.rootDir, '**/*.ts'),
                 path.join(this.rootDir, '**/*.tsx'),
                 '!' + path.join(this.rootDir, '**/*.stories.tsx'), // Exclude stories.tsx files entirely
                 '!' + path.join(this.rootDir, 'node_modules/**'),
@@ -128,6 +134,9 @@ export class DependencyGraph {
         if (!changedFiles || changedFiles.length === 0) {
             for (const sf of sourceFiles) {
                 const filePath = sf.getFilePath().toString();
+                if (isExcludedFile(filePath)) {
+                    continue;
+                }
                 const isClient = this.hasUseClientDirective(sf);
                 const imports = this.getStaticImports(sf);
                 this.nodes.set(filePath, { filePath, isClient, imports });
@@ -138,6 +147,9 @@ export class DependencyGraph {
             for (const sf of sourceFiles) {
                 const filePath = sf.getFilePath().toString();
                 if (affectedFiles.has(filePath)) {
+                    if (isExcludedFile(filePath)) {
+                        continue;
+                    }
                     const isClient = this.hasUseClientDirective(sf);
                     const imports = this.getStaticImports(sf);
                     this.nodes.set(filePath, { filePath, isClient, imports });
@@ -233,17 +245,26 @@ export class DependencyGraph {
     }
 
     /**
-     * Returns an array of absolute file paths statically imported by the given file.
+     * Returns an array of absolute file paths statically imported or re-exported by the given file.
      * @param sf ts-morph SourceFile
-     * @returns Array of imported file paths
+     * @returns Array of imported/re-exported file paths
      */
     getStaticImports(sf: SourceFile): string[] {
-        return sf.getImportDeclarations()
+        // import ... from '...'
+        const importFiles = sf.getImportDeclarations()
             .map(imp => {
                 const f = imp.getModuleSpecifierSourceFile();
                 return f ? f.getFilePath().toString() : undefined;
             })
             .filter((f): f is string => typeof f === 'string');
+        // export * from '...'; export { ... } from '...';
+        const exportFiles = sf.getExportDeclarations()
+            .map(exp => {
+                const f = exp.getModuleSpecifierSourceFile?.();
+                return f ? f.getFilePath().toString() : undefined;
+            })
+            .filter((f): f is string => typeof f === 'string');
+        return [...importFiles, ...exportFiles];
     }
 }
 
