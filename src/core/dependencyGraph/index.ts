@@ -6,9 +6,8 @@ import * as path from 'path';
  * - 'client': Entry or dependency with "use client" directive
  * - 'server': Server-only component
  * - 'universal': Referenced from both client and server
- * - 'other': Config, type definition, test, etc.
  */
-export type ComponentType = 'client' | 'server' | 'universal' | 'other';
+export type ComponentType = 'client' | 'server' | 'universal';
 
 /**
  * Node information for each file in the dependency graph.
@@ -38,14 +37,22 @@ export class DependencyGraph {
     rootDir: string;
 
     private _onDidUpdate = new (require('events').EventEmitter)();
+    /**
+     * Registers a listener for dependency graph update events.
+     * @param listener Callback function to invoke when the graph updates
+     */
     onDidUpdate(listener: () => void) {
         this._onDidUpdate.on('update', listener);
     }
+    /**
+     * Emits an update event to all registered listeners.
+     */
     private fireDidUpdate() {
         this._onDidUpdate.emit('update');
     }
 
     /**
+     * Creates a new DependencyGraph instance.
      * @param rootDir Project root directory
      * @param tsConfigFilePath Optional absolute path to tsconfig.json (default: <rootDir>/tsconfig.json)
      */
@@ -57,6 +64,12 @@ export class DependencyGraph {
         });
     }
 
+    /**
+     * Rebuilds the dependency graph. If changedFiles is specified, only those files and their dependencies are re-parsed.
+     * Otherwise, only new/deleted files are added/removed and node information is updated.
+     * For performance, a full rebuild is avoided whenever possible.
+     * @param changedFiles Array of changed file paths (if omitted, performs a full scan)
+     */
     build(changedFiles?: string[]) {
         let affectedFiles = new Set<string>();
         if (changedFiles && changedFiles.length > 0) {
@@ -65,6 +78,10 @@ export class DependencyGraph {
                 const sf = this.project.getSourceFile(changed);
                 if (sf) {
                     this.project.removeSourceFile(sf);
+                }
+                // Remove from nodes map if file no longer exists
+                if (!require('fs').existsSync(changed)) {
+                    this.nodes.delete(changed);
                 }
                 try {
                     this.project.addSourceFileAtPath(changed);
@@ -84,28 +101,31 @@ export class DependencyGraph {
                 }
             }
         } else {
-            // Forget all existing SourceFiles
-            this.project.getSourceFiles().forEach(sf => this.project.removeSourceFile(sf));
-            this.project.addSourceFilesAtPaths([
-                path.join(this.rootDir, '**/*.{ts,tsx}'),
+            // Only add files if not already present (avoid full remove/add cycle)
+            const existingFiles = new Set(this.project.getSourceFiles().map(sf => sf.getFilePath().toString()));
+            const glob = [
+                path.join(this.rootDir, '**/*.tsx'),
+                '!' + path.join(this.rootDir, '**/*.stories.tsx'), // Exclude stories.tsx files entirely
                 '!' + path.join(this.rootDir, 'node_modules/**'),
                 '!' + path.join(this.rootDir, '.git/**'),
-                '!' + path.join(this.rootDir, 'out/**'),
-                '!' + path.join(this.rootDir, 'dist/**'),
-            ]);
-        }
-        const sourceFiles = this.project.getSourceFiles();
-        // --- Node cleanup added here ---
-        const currentFileSet = new Set(sourceFiles.map(sf => sf.getFilePath().toString()));
-        for (const filePath of Array.from(this.nodes.keys())) {
-            if (!currentFileSet.has(filePath)) {
-                this.nodes.delete(filePath);
+                '!' + path.join(this.rootDir, '.next/**'),
+            ];
+            this.project.addSourceFilesAtPaths(glob);
+            // Remove files that no longer exist
+            const sourceFiles = this.project.getSourceFiles();
+            const currentFileSet = new Set(sourceFiles.map(sf => sf.getFilePath().toString()));
+            for (const filePath of Array.from(this.nodes.keys())) {
+                if (!currentFileSet.has(filePath)) {
+                    this.nodes.delete(filePath);
+                    const sf = this.project.getSourceFile(filePath);
+                    if (sf) { this.project.removeSourceFile(sf); }
+                }
             }
         }
-        // --- Node cleanup ends here ---
+        const sourceFiles = this.project.getSourceFiles();
         logDebug('build: sourceFiles', sourceFiles.map(sf => sf.getFilePath()));
+        // Always update all nodes for a full build
         if (!changedFiles || changedFiles.length === 0) {
-            this.nodes.clear();
             for (const sf of sourceFiles) {
                 const filePath = sf.getFilePath().toString();
                 const isClient = this.hasUseClientDirective(sf);
@@ -132,6 +152,12 @@ export class DependencyGraph {
         this.fireDidUpdate();
     }
 
+    /**
+     * Classifies the type (client/server/universal) of all nodes.
+     * - client: Entry point or dependency with a "use client" directive
+     * - server: Not reachable from any client entry
+     * - universal: Imported from both client and server components
+     */
     classifyComponentTypes() {
         // 1. client entry points
         const clientEntries = Array.from(this.nodes.values()).filter(n => n.isClient).map(n => n.filePath);
@@ -155,8 +181,9 @@ export class DependencyGraph {
                 node.type = 'server';
             }
         }
-        // 4. universal: imported from both client and server
+        // 4. universal: imported from both client and server (single pass)
         const importers = new Map<string, Set<string>>();
+        // 1st pass: collect importers and check universal in one go
         for (const [fp, node] of this.nodes) {
             for (const imp of node.imports) {
                 if (!importers.has(imp)) { importers.set(imp, new Set()); }
@@ -164,43 +191,52 @@ export class DependencyGraph {
             }
         }
         for (const [fp, node] of this.nodes) {
+            if (node.isClient) { continue; }
+
             const from = importers.get(fp);
             if (!from) { continue; }
+
             let hasClient = false, hasServer = false;
             for (const importer of from) {
                 const t = this.nodes.get(importer)?.type;
                 if (t === 'client') { hasClient = true; }
                 if (t === 'server') { hasServer = true; }
-            }
-            if (hasClient && hasServer) {
-                node.type = 'universal';
-            }
-        }
-        // 5. other: config, d.ts, test, spec, stories, __mocks__, etc. (not a component)
-        for (const [fp, node] of this.nodes) {
-            const lower = fp.toLowerCase();
-            if (
-                /\.(config|d)\.[jt]sx?$/.test(lower) ||
-                /\.(test|spec|stories)\.[jt]sx?$/.test(lower) ||
-                /__mocks__/.test(lower)
-            ) {
-                node.type = 'other';
+                if (hasClient && hasServer) {
+                    node.type = 'universal';
+                    break;
+                }
             }
         }
+        // No 'other' classification: config, d.ts, test, spec, stories, __mocks__, etc. are not handled here.
     }
 
+    /**
+     * Determines if the first statement in the file is a "use client" directive.
+     * Only the first statement is checked, per Next.js spec.
+     * @param sf ts-morph SourceFile
+     * @returns true if the file is a client component
+     */
     hasUseClientDirective(sf: SourceFile): boolean {
+        // Only check the first statement for the exact 'use client' directive (no semicolon required)
         const stmts = sf.getStatements();
-        for (let i = 0; i < Math.min(5, stmts.length); i++) {
-            const stmt = stmts[i];
+        if (stmts.length > 0) {
+            const stmt = stmts[0];
             if (stmt.getKindName() === 'ExpressionStatement') {
-                const text = stmt.getText().replace(/['";]/g, '').trim();
-                if (text === 'use client') { return true; }
+                const text = stmt.getText().trim();
+                // Accept both 'use client' and "use client" (with or without semicolon)
+                if (text === "'use client'" || text === '"use client"' || text === "'use client';" || text === '"use client";') {
+                    return true;
+                }
             }
         }
         return false;
     }
 
+    /**
+     * Returns an array of absolute file paths statically imported by the given file.
+     * @param sf ts-morph SourceFile
+     * @returns Array of imported file paths
+     */
     getStaticImports(sf: SourceFile): string[] {
         return sf.getImportDeclarations()
             .map(imp => {
@@ -219,7 +255,6 @@ export function getColorByType(type?: ComponentType): string {
         case 'client': return 'red';
         case 'server': return 'black';
         case 'universal': return 'blue';
-        case 'other': return 'gray';
         default: return 'gray';
     }
 }
@@ -232,7 +267,6 @@ export function getLabelByType(type?: ComponentType): string {
         case 'client': return 'CLIENT';
         case 'server': return 'SERVER';
         case 'universal': return 'UNIVERSAL';
-        case 'other': return 'OTHER';
         default: return '';
     }
 }

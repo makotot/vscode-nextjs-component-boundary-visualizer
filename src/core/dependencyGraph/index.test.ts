@@ -63,22 +63,20 @@ describe('DependencyGraph', function () {
             expect: { 'universal.tsx': 'universal' }
         },
         {
-            name: 'other: config, d.ts, test, spec, stories, __mocks__',
+            name: 'other: config, d.ts, test, spec, __mocks__',
             files: {
                 'foo.config.ts': 'export const x = 1;',
                 'foo.d.ts': 'export type X = number;',
                 'foo.test.ts': 'export const t = 1;',
                 'foo.spec.ts': 'export const s = 1;',
-                'foo.stories.ts': 'export const st = 1;',
                 '__mocks__/bar.ts': 'export const m = 1;'
             },
             expect: {
-                'foo.config.ts': 'other',
-                'foo.d.ts': 'other',
-                'foo.test.ts': 'other',
-                'foo.spec.ts': 'other',
-                'foo.stories.ts': 'other',
-                '__mocks__/bar.ts': 'other'
+                'foo.config.ts': undefined,
+                'foo.d.ts': undefined,
+                'foo.test.ts': undefined,
+                'foo.spec.ts': undefined,
+                '__mocks__/bar.ts': undefined
             }
         },
         {
