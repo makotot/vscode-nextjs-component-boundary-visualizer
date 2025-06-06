@@ -22,7 +22,7 @@ You can install this extension by searching for "Next.js Component Boundary Visu
 ## Requirements
 
 - VS Code 1.100.0 or later
-- A Next.js project using the App Router (with files using `.ts` or `.tsx`)
+- A Next.js project using the App Router (TypeScript projects are supported, but only `.tsx` files are analyzed for component boundaries)
 - A `tsconfig.json` file must exist at the project root (or specify its path via extension settings)
 
 ## Usage
@@ -51,6 +51,6 @@ These icons appear in the file explorer, status bar, and as line decorations in 
 
 - Only supports projects using the App Router structure.
 - Does not support legacy Next.js pages directory.
-- Only supports `.ts` and `.tsx` files (not `.js` or `.jsx`).
+- Only `.tsx` files are analyzed for component boundaries (not `.ts`, `.js`, or `.jsx`).
 - The extension will not work if `tsconfig.json` is missing or misconfigured.
 - Does not analyze dynamic imports; only static imports are considered for dependency graph and component type classification.
