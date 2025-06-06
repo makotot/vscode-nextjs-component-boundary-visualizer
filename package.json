@@ -2,7 +2,7 @@
   "name": "vscode-nextjs-component-boundary-visualizer",
   "displayName": "Next.js Component Boundary Visualizer",
   "description": "Visualizes and distinguishes between server, client, and universal (shared) components in Next.js App Router projects.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.100.0"
   },
