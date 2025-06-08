@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { DependencyGraph, getLabelByType, getColorByType, ComponentType } from '../../core/dependencyGraph';
+import { DependencyGraph, getLabelByType } from '../../core/dependencyGraph';
 import { typeIcon } from '../typeIcon';
 
 export class ComponentFileDecorationProvider implements vscode.FileDecorationProvider {

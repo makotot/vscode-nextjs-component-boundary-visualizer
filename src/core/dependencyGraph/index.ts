@@ -107,14 +107,27 @@ export class DependencyGraph {
             }
         } else {
             // Only add files if not already present (avoid full remove/add cycle)
-            const existingFiles = new Set(this.project.getSourceFiles().map(sf => sf.getFilePath().toString()));
             const glob = [
                 path.join(this.rootDir, '**/*.ts'),
                 path.join(this.rootDir, '**/*.tsx'),
-                '!' + path.join(this.rootDir, '**/*.stories.tsx'), // Exclude stories.tsx files entirely
+                // Exclude common non-source and generated files
+                '!' + path.join(this.rootDir, '**/*.stories.tsx'),
+                '!' + path.join(this.rootDir, '**/*.stories.ts'),
+                '!' + path.join(this.rootDir, '**/*.spec.ts'),
+                '!' + path.join(this.rootDir, '**/*.spec.tsx'),
+                '!' + path.join(this.rootDir, '**/*.test.ts'),
+                '!' + path.join(this.rootDir, '**/*.test.tsx'),
+                '!' + path.join(this.rootDir, '**/*.d.ts'),
+                '!' + path.join(this.rootDir, '**/*.config.ts'),
+                '!' + path.join(this.rootDir, '**/*.config.tsx'),
+                '!' + path.join(this.rootDir, '**/__mocks__/**'),
                 '!' + path.join(this.rootDir, 'node_modules/**'),
                 '!' + path.join(this.rootDir, '.git/**'),
                 '!' + path.join(this.rootDir, '.next/**'),
+                '!' + path.join(this.rootDir, 'dist/**'),
+                '!' + path.join(this.rootDir, 'out/**'),
+                '!' + path.join(this.rootDir, 'build/**'),
+                '!' + path.join(this.rootDir, 'coverage/**'),
             ];
             this.project.addSourceFilesAtPaths(glob);
             // Remove files that no longer exist
@@ -265,18 +278,6 @@ export class DependencyGraph {
             })
             .filter((f): f is string => typeof f === 'string');
         return [...importFiles, ...exportFiles];
-    }
-}
-
-/**
- * Returns the color for each component type (for graph visualization).
- */
-export function getColorByType(type?: ComponentType): string {
-    switch (type) {
-        case 'client': return 'red';
-        case 'server': return 'black';
-        case 'universal': return 'blue';
-        default: return 'gray';
     }
 }
 
