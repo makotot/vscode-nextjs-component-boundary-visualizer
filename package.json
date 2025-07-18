@@ -24,6 +24,11 @@
           "type": "string",
           "default": "",
           "description": "Path to tsconfig.json (absolute or workspace-relative). If empty, <project root>/tsconfig.json is used."
+        },
+        "nextjsComponentBoundaryVisualizer.enableLineIcon": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable/disable the icon at the beginning of the line."
         }
       }
     }
