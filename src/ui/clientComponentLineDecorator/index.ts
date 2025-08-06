@@ -26,17 +26,15 @@ export class ClientComponentLineDecorator {
             this.decoration = undefined;
         }
         if (node && node.type === 'client') {
-            const config = vscode.workspace.getConfiguration('nextjsComponentBoundaryVisualizer');
-            const enableLineIcon = config.get<boolean>('enableLineIcon');
             this.decoration = vscode.window.createTextEditorDecorationType({
                 isWholeLine: true,
                 backgroundColor: 'rgba(128,0,128,0.08)', // light purple
-                before: enableLineIcon ? {
+                before: {
                     contentText: typeIcon.client,
                     color: '#a259ff',
                     margin: '0 8px 0 0',
                     fontWeight: 'bold',
-                } : undefined,
+                },
             });
             const selections = editor.selections.map(sel => ({
                 range: new vscode.Range(sel.start.line, 0, sel.start.line, 0),
@@ -44,17 +42,15 @@ export class ClientComponentLineDecorator {
             }));
             editor.setDecorations(this.decoration, selections);
         } else if (node && node.type === 'universal') {
-            const config = vscode.workspace.getConfiguration('nextjsComponentBoundaryVisualizer');
-            const enableLineIcon = config.get<boolean>('enableLineIcon');
             this.decoration = vscode.window.createTextEditorDecorationType({
                 isWholeLine: true,
                 backgroundColor: 'rgba(0, 120, 212, 0.08)', // light blue
-                before: enableLineIcon ? {
+                before: {
                     contentText: typeIcon.universal,
                     color: '#0078d4',
                     margin: '0 8px 0 0',
                     fontWeight: 'bold',
-                } : undefined,
+                },
             });
             const selections = editor.selections.map(sel => ({
                 range: new vscode.Range(sel.start.line, 0, sel.start.line, 0),
