@@ -37,7 +37,13 @@ export function activate(context: vscode.ExtensionContext) {
 	if (graph) {
 		graph.build();
 		new ClientComponentStatusBar(context, graph);
-		new ClientComponentLineDecorator(context, graph);
+
+		// Instantiate the line decorator if enableLineIcon is true
+		const config = vscode.workspace.getConfiguration('nextjsComponentBoundaryVisualizer');
+		const enableLineIcon = config.get<boolean>('enableLineIcon');
+		if (enableLineIcon) {
+			new ClientComponentLineDecorator(context, graph);
+		}
 
 		// Update the graph only once on file save/create/delete (debounced)
 		const watcher = vscode.workspace.createFileSystemWatcher('**/*.{ts,tsx}');

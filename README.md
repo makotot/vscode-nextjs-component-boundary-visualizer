@@ -38,6 +38,7 @@ If your `tsconfig.json` is not at the project root, set the path in your VS Code
 ## Extension Settings
 
 - `nextjsComponentBoundaryVisualizer.tsconfigPath`: Path to `tsconfig.json` (absolute or workspace-relative). If empty, `<project root>/tsconfig.json` is used.
+- `nextjsComponentBoundaryVisualizer.enableLineIcon`: Enable/disable the icon at the beginning of the line. Defaults to true.
 
 ## Icons
 
