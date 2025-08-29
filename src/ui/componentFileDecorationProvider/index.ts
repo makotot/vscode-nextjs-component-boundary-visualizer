@@ -1,14 +1,15 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { DependencyGraph, getLabelByType } from '../../core/dependencyGraph';
+import { ComponentEnvGraph } from '@makotot/component-env-graph';
 import { typeIcon } from '../typeIcon';
+import { getLabelByType } from '../../core/dependencyGraph';
 
 export class ComponentFileDecorationProvider implements vscode.FileDecorationProvider {
-    private graph: DependencyGraph;
+    private graph: ComponentEnvGraph;
     private _onDidChangeFileDecorations = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>();
     readonly onDidChangeFileDecorations = this._onDidChangeFileDecorations.event;
 
-    constructor(graph: DependencyGraph) {
+    constructor(graph: ComponentEnvGraph) {
         this.graph = graph;
     }
 

@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { DependencyGraph, ComponentType } from '../../core/dependencyGraph';
+import { ComponentEnvGraph } from '@makotot/component-env-graph';
 import { typeIcon } from '../typeIcon';
 
 export class ClientComponentLineDecorator {
-    private graph: DependencyGraph;
+    private graph: ComponentEnvGraph;
     private decoration: vscode.TextEditorDecorationType | undefined;
 
-    constructor(context: vscode.ExtensionContext, graph: DependencyGraph) {
+    constructor(context: vscode.ExtensionContext, graph: ComponentEnvGraph) {
         this.graph = graph;
         this.graph.onDidUpdate(() => {
             this.update(vscode.window.activeTextEditor);
