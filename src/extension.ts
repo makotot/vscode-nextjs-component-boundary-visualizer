@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
-import { DependencyGraph } from './core/dependencyGraph';
+import { ComponentEnvGraph } from '@makotot/component-env-graph';
 import { ComponentFileDecorationProvider } from './ui/componentFileDecorationProvider';
 import { ClientComponentStatusBar } from './ui/clientComponentStatusbar';
 import { ClientComponentLineDecorator } from './ui/clientComponentLineDecorator';
@@ -33,7 +33,9 @@ export function activate(context: vscode.ExtensionContext) {
 			: path.join(workspaceRoot, configPathSetting);
 	}
 
-	const graph = new DependencyGraph(workspaceRoot, tsConfigFilePath);
+	const graph = new ComponentEnvGraph(workspaceRoot, {
+		tsConfigFilePath,
+	});
 	if (graph) {
 		graph.build();
 		new ClientComponentStatusBar(context, graph);

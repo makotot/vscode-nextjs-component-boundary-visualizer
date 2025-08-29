@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { DependencyGraph } from '../../core/dependencyGraph';
+import { ComponentEnvGraph } from '@makotot/component-env-graph';
 import { typeIcon } from '../typeIcon';
 
 // Returns display info for each file type (status bar)
@@ -35,9 +35,9 @@ function getStatusBarDisplayForNode(node: { type?: string } | undefined): {
 
 export class ClientComponentStatusBar {
     private statusBarItem: vscode.StatusBarItem;
-    private graph: DependencyGraph;
+    private graph: ComponentEnvGraph;
 
-    constructor(context: vscode.ExtensionContext, graph: DependencyGraph) {
+    constructor(context: vscode.ExtensionContext, graph: ComponentEnvGraph) {
         this.graph = graph;
         this.statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 100);
         this.statusBarItem.hide();
