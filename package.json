@@ -38,18 +38,18 @@
     "test": "vitest --run"
   },
   "devDependencies": {
-    "@types/node": "18.x",
-    "@types/vscode": "^1.100.0",
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0",
-    "@vscode/test-electron": "^2.3.6",
-    "eslint": "^8.52.0",
-    "glob": "^10.3.10",
-    "typescript": "^5.2.2",
-    "vitest": "3.2.1"
+    "@types/node": "24.x",
+    "@types/vscode": "^1.103.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.35.0",
+    "glob": "^11.0.3",
+    "typescript": "^5.9.2",
+    "vitest": "3.2.4"
   },
   "dependencies": {
-    "@makotot/component-env-graph": "0.1.3"
+    "@makotot/component-env-graph": "0.1.5"
   },
   "keywords": [
     "nextjs",
