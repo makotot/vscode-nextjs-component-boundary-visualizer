@@ -18,6 +18,8 @@ export class ComponentFileDecorationProvider implements vscode.FileDecorationPro
     }
 
     provideFileDecoration(uri: vscode.Uri): vscode.ProviderResult<vscode.FileDecoration> {
+        // Only decorate component files (.tsx). Exclude plain .ts files.
+        if (!uri.fsPath.toLowerCase().endsWith('.tsx')) { return; }
         const normalizedPath = path.resolve(uri.fsPath);
         const node = this.graph.nodes.get(normalizedPath);
         if (!node || !node.type) { return; }

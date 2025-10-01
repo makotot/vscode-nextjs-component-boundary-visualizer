@@ -20,6 +20,8 @@ export class ClientComponentLineDecorator {
     private update(editor?: vscode.TextEditor) {
         if (!editor || !this.graph) { return; }
         const filePath = editor.document.uri.fsPath;
+        // Only show line decoration for TSX component files
+        if (!filePath.toLowerCase().endsWith('.tsx')) { return; }
         const node = this.graph.nodes.get(filePath);
         if (this.decoration) {
             this.decoration.dispose();

@@ -63,6 +63,11 @@ export class ClientComponentStatusBar {
             return;
         }
         const filePath = editor.document.uri.fsPath;
+        // Only show status for TSX component files
+        if (!filePath.toLowerCase().endsWith('.tsx')) {
+            this.statusBarItem.hide();
+            return;
+        }
         const node = this.graph.nodes.get(filePath);
         const display = getStatusBarDisplayForNode(node);
         if (display) {
