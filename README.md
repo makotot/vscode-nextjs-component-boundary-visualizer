@@ -46,12 +46,13 @@ If your `tsconfig.json` is not at the project root, set the path in your VS Code
 - **Universal Component**: `♾️`
 - **Server Component**: No icon (server components do not display a badge or icon)
 
-These icons appear in the file explorer, status bar, and as line decorations in the editor to help you quickly distinguish component types.
+These icons appear in the file explorer, status bar, and as line decorations in the editor to help you quickly distinguish component types. Note: visual decorations are applied only to `.tsx` files (component files). Plain `.ts` files are analyzed for dependency/type classification but are not decorated.
 
 ## Known Issues
 
 - Only supports projects using the App Router structure.
 - Does not support legacy Next.js pages directory.
 - Only `.ts` and `.tsx` files are analyzed for component boundaries (excluding config, d.ts, test, spec, stories, and `__mocks__` files; `.js`/`.jsx` are not supported).
+- Visual decorations (explorer badges, status bar, and line icons) are shown only for `.tsx` files. `.ts` files are excluded from icon display because they are not React component files.
 - The extension will not work if `tsconfig.json` is missing or misconfigured.
 - Does not analyze dynamic imports; only static imports and re-exports are considered for dependency graph and component type classification.
