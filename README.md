@@ -56,3 +56,8 @@ These icons appear in the file explorer, status bar, and as line decorations in 
 - Visual decorations (explorer badges, status bar, and line icons) are shown only for `.tsx` files. `.ts` files are excluded from icon display because they are not React component files.
 - The extension will not work if `tsconfig.json` is missing or misconfigured.
 - Does not analyze dynamic imports; only static imports and re-exports are considered for dependency graph and component type classification.
+
+## Related Extensions
+
+- [Next.js Server Functions Visualizer](https://marketplace.visualstudio.com/items?itemName=makotot.nextjs-server-functions-visualizer)
+- [Next.js RSC Boundary Pack](https://marketplace.visualstudio.com/items?itemName=makotot.nextjs-rsc-boundary-pack)
