@@ -8,7 +8,6 @@ function getStatusBarDisplayForNode(node: { type?: string } | undefined):
   | {
       text: string;
       tooltip: string;
-      backgroundColor: vscode.ThemeColor;
     }
   | undefined {
   if (!node) {
@@ -19,26 +18,17 @@ function getStatusBarDisplayForNode(node: { type?: string } | undefined):
       return {
         text: `${typeIcon.client} Client Component`,
         tooltip: "This file is a Next.js Client Component",
-        backgroundColor: new vscode.ThemeColor(
-          "statusBarItem.warningBackground"
-        ),
       };
     case "server":
       return {
         text: "Server Component",
         tooltip: "This file is a Next.js Server Component",
-        backgroundColor: new vscode.ThemeColor(
-          "statusBarItem.debuggingBackground"
-        ),
       };
     case "universal":
       return {
         text: `${typeIcon.universal} Universal Component`,
         tooltip:
           "This file is a Universal Component (can be used as both Client and Server Component in Next.js)",
-        backgroundColor: new vscode.ThemeColor(
-          "statusBarItem.prominentBackground"
-        ),
       };
     default:
       return;
@@ -57,7 +47,6 @@ export class ClientComponentStatusBar {
       priority
     );
     this.statusBarItem.hide();
-    this.statusBarItem.backgroundColor = new vscode.ThemeColor("charts.purple");
     context.subscriptions.push(this.statusBarItem);
 
     // Update UI only on graph update
@@ -97,7 +86,6 @@ export class ClientComponentStatusBar {
     if (display) {
       this.statusBarItem.text = display.text;
       this.statusBarItem.tooltip = display.tooltip;
-      this.statusBarItem.backgroundColor = display.backgroundColor;
       this.statusBarItem.show();
     } else {
       this.statusBarItem.hide();
