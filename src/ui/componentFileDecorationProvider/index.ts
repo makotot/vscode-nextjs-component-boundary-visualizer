@@ -3,7 +3,6 @@ import * as path from "node:path";
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { getLabelByType } from "../../core/dependencyGraph";
 import { typeIcon } from "../typeIcon";
 
 export class ComponentFileDecorationProvider
@@ -39,16 +38,14 @@ export class ComponentFileDecorationProvider
     if (node.type === "client") {
       return {
         badge: typeIcon.client,
-        tooltip: `${getLabelByType("client")} Component`,
-        color: new vscode.ThemeColor("charts.purple"),
+        tooltip: "Client Component",
         propagate: true,
       };
     }
     if (node.type === "universal") {
       return {
         badge: typeIcon.universal,
-        tooltip: `${getLabelByType("universal")} Component`,
-        color: new vscode.ThemeColor("charts.blue"),
+        tooltip: "Shared Component",
         propagate: true,
       };
     }
