@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.5.1
+
+### Patch Changes
+
+- 6058a12: update snapshot
+
 ## 0.5.0
 
 ### Minor Changes
