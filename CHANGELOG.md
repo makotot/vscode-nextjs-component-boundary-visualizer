@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.6.0
+
+### Minor Changes
+
+- e9efc16: Adding an icon to the client boundary in JSX
+
 ## 0.5.1
 
 ### Patch Changes
