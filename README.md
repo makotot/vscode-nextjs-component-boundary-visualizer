@@ -1,8 +1,11 @@
 # Next.js Component Boundary Visualizer
 
-Visualizes and distinguishes between server, client, and universal components in Next.js App Router projects. This extension provides visual cues in the VS Code explorer, status bar, and editor to help you understand the component boundaries in your Next.js App Router codebase.
+Visualizes server, client, and universal components with explorer badges, status bar indicators, editor decorations, and JSX client boundary markers in Next.js App Router projects.
 
-![Screenshot](assets/screenshot.png)
+|                                                                                    |                                                                                          |
+| ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Show Client Environment                                                            | Show JSX Client Boundary                                                                 |
+| <img src="assets/screenshot-client-env.png" alt="Client Environment" width="100%"> | <img src="assets/screenshot-client-boundary.png" alt="JSX Client Boundary" width="100%"> |
 
 ---
 
@@ -14,8 +17,10 @@ You can install this extension by searching for "Next.js Component Boundary Visu
 
 ## Features
 
-- **Explorer Badges**: Shows icons for client and universal components in the file explorer.
+- **High‑precision static analysis**: Infers server, client, and universal(shared) components using the TypeScript type checker and a dependency graph.
+- **Explorer Badges**: Shows icons for client(⚡️) and universal(♾️) components in the file explorer.
 - **Status Bar**: Displays the type of the currently open component (client, server, universal).
+- **JSX Client Boundary Markers**: shows a subdued end‑of‑line indicator (⚡️) on lines that render Client Components across a boundary.
 - **Line Decorations**: Adds a colored line and icon to the editor for client and universal components.
 - **Automatic Updates**: Watches for file changes and updates the visualization in real time.
 
@@ -39,6 +44,7 @@ If your `tsconfig.json` is not at the project root, set the path in your VS Code
 
 - `nextjsComponentBoundaryVisualizer.tsconfigPath`: Path to `tsconfig.json` (absolute or workspace-relative). If empty, `<project root>/tsconfig.json` is used.
 - `nextjsComponentBoundaryVisualizer.enableLineIcon`: Enable/disable the icon at the beginning of the line. Defaults to false.
+  - Note: The JSX Client Boundary end‑of‑line indicator is always shown when applicable.
 
 ## Icons
 
@@ -53,7 +59,7 @@ These icons appear in the file explorer, status bar, and as line decorations in 
 - Only supports projects using the App Router structure.
 - Does not support legacy Next.js pages directory.
 - Only `.ts` and `.tsx` files are analyzed for component boundaries (excluding config, d.ts, test, spec, stories, and `__mocks__` files; `.js`/`.jsx` are not supported).
-- Visual decorations (explorer badges, status bar, and line icons) are shown only for `.tsx` files. `.ts` files are excluded from icon display because they are not React component files.
+- Visual decorations (explorer badges, status bar, line icons, and JSX Client Boundary markers) are shown only for `.tsx` files. `.ts` files are excluded from icon display because they are not React component files.
 - The extension will not work if `tsconfig.json` is missing or misconfigured.
 - Does not analyze dynamic imports; only static imports and re-exports are considered for dependency graph and component type classification.
 
