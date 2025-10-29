@@ -9,6 +9,7 @@ import * as vscode from "vscode";
 import { ClientComponentLineDecorator } from "./ui/clientComponentLineDecorator";
 import { ClientComponentStatusBar } from "./ui/clientComponentStatusbar";
 import { ComponentFileDecorationProvider } from "./ui/componentFileDecorationProvider";
+import { JsxClientBoundaryLineDecorator } from "./ui/jsxClientBoundaryDecorator";
 
 // Utility: debounce function (global)
 function debounce<T extends (...args: vscode.Uri[]) => void>(
@@ -59,6 +60,9 @@ export function activate(context: vscode.ExtensionContext) {
       new ClientComponentLineDecorator(context, graph);
     }
 
+    // Always show end-of-line icons for JSX client boundaries in the active file
+    new JsxClientBoundaryLineDecorator(context, graph);
+
     // Update the graph only once on file save/create/delete (debounced)
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.{ts,tsx}");
     const interval = 200;
@@ -77,6 +81,4 @@ export function activate(context: vscode.ExtensionContext) {
     );
     graph.onDidUpdate(() => decorationProvider.refresh());
   }
-
-  // Status bar and editor line decoration logic is in client-component-statusbar.ts and client-component-line-decorator.ts
 }
