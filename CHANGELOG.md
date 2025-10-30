@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.7.0
+
+### Minor Changes
+
+- d819992: migrate extension to esm
+
 ## 0.6.0
 
 ### Minor Changes
