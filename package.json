@@ -3,6 +3,7 @@
   "displayName": "Next.js Component Boundary Visualizer",
   "description": "Visualizes server, client, and universal components with explorer badges, status bar indicators, editor decorations, and JSX client boundary markers in Next.js App Router projects.",
   "version": "0.6.0",
+  "type": "module",
   "engines": {
     "vscode": "^1.100.0"
   },
@@ -54,7 +55,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@makotot/component-env-graph": "0.1.7",
+    "@makotot/component-env-graph": "0.1.8",
     "ts-morph": "27.0.2"
   },
   "keywords": [

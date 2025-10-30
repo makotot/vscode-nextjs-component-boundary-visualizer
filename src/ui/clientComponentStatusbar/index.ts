@@ -1,7 +1,7 @@
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { typeIcon } from "../typeIcon";
+import { typeIcon } from "../typeIcon/index.js";
 
 // Returns display info for each file type (status bar)
 function getStatusBarDisplayForNode(node: { type?: string } | undefined):
