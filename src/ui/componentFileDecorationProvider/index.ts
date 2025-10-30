@@ -3,7 +3,7 @@ import * as path from "node:path";
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { typeIcon } from "../typeIcon";
+import { typeIcon } from "../typeIcon/index.js";
 
 export class ComponentFileDecorationProvider
   implements vscode.FileDecorationProvider

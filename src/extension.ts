@@ -1,15 +1,12 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-
 // biome-ignore lint/performance/noNamespaceImport: node:path cannot import with default import
 import * as path from "node:path";
 import { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { ClientComponentLineDecorator } from "./ui/clientComponentLineDecorator";
-import { ClientComponentStatusBar } from "./ui/clientComponentStatusbar";
-import { ComponentFileDecorationProvider } from "./ui/componentFileDecorationProvider";
-import { JsxClientBoundaryLineDecorator } from "./ui/jsxClientBoundaryDecorator";
+import { ClientComponentLineDecorator } from "./ui/clientComponentLineDecorator/index.js";
+import { ClientComponentStatusBar } from "./ui/clientComponentStatusbar/index.js";
+import { ComponentFileDecorationProvider } from "./ui/componentFileDecorationProvider/index.js";
+import { JsxClientBoundaryLineDecorator } from "./ui/jsxClientBoundaryDecorator/index.js";
 
 // Utility: debounce function (global)
 function debounce<T extends (...args: vscode.Uri[]) => void>(
