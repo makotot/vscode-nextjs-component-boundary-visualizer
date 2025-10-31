@@ -1,5 +1,15 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.8.0
+
+### Minor Changes
+
+- c139fc8: add an option to exclude files or directories from analysis.
+
+### Patch Changes
+
+- bb298ba: update component-env-graph to v0.1.10
+
 ## 0.7.0
 
 ### Minor Changes
