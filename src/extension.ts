@@ -43,6 +43,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   const graph = new ComponentEnvGraph(workspaceRoot, {
     tsConfigFilePath,
+    exclude: vscode.workspace
+      .getConfiguration("nextjsComponentBoundaryVisualizer")
+      .get<string[]>("exclude"),
   });
   if (graph) {
     graph.build();

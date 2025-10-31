@@ -30,6 +30,13 @@
           "type": "boolean",
           "default": false,
           "description": "Enable/disable the icon at the beginning of the line."
+        },
+        "nextjsComponentBoundaryVisualizer.exclude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of glob patterns to exclude files or directories from analysis."
         }
       }
     }
@@ -55,7 +62,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@makotot/component-env-graph": "0.1.8",
+    "@makotot/component-env-graph": "0.1.9",
     "ts-morph": "27.0.2"
   },
   "keywords": [
