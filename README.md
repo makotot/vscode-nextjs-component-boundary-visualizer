@@ -45,6 +45,17 @@ If your `tsconfig.json` is not at the project root, set the path in your VS Code
 - `nextjsComponentBoundaryVisualizer.tsconfigPath`: Path to `tsconfig.json` (absolute or workspace-relative). If empty, `<project root>/tsconfig.json` is used.
 - `nextjsComponentBoundaryVisualizer.enableLineIcon`: Enable/disable the icon at the beginning of the line. Defaults to false.
   - Note: The JSX Client Boundary end‑of‑line indicator is always shown when applicable.
+- `nextjsComponentBoundaryVisualizer.exclude`: List of glob patterns to exclude files or directories from analysis and decorations. Patterns are workspace‑relative.
+  - Examples:
+    ```json
+    {
+      "nextjsComponentBoundaryVisualizer.exclude": [
+        "**/*.want-to-exclude.tsx",
+        "packages/ui/src/want-to-exclude/**"
+      ]
+    }
+    ```
+  - Note: Some files are excluded by default (e.g., config files, `*.d.ts`, tests, specs, stories, and `__mocks__`). Use this setting to add additional project‑specific exclusions.
 
 ## Icons
 

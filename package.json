@@ -62,7 +62,7 @@
     "vitest": "3.2.4"
   },
   "dependencies": {
-    "@makotot/component-env-graph": "0.1.9",
+    "@makotot/component-env-graph": "0.1.10",
     "ts-morph": "27.0.2"
   },
   "keywords": [
