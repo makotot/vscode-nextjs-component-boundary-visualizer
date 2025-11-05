@@ -4,13 +4,11 @@ import * as path from "node:path";
 export function resolveTsconfigPath(
   workspaceRoot: string,
   configPathSetting: string | undefined
-):
-  | {
-      tsConfigFilePath: string;
-    }
-  | undefined {
+): {
+  tsConfigFilePath?: string;
+} {
   if (!configPathSetting) {
-    return;
+    return {};
   }
   const tsConfigFilePath = path.isAbsolute(configPathSetting)
     ? configPathSetting

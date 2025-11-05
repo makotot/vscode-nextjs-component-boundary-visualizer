@@ -8,7 +8,7 @@ describe("resolveTsconfigPath", () => {
     name: string;
     root: string;
     setting: string | undefined;
-    expected: { tsConfigFilePath: string } | undefined;
+    expected: { tsConfigFilePath?: string };
   };
 
   const ROOT = "/project/root";
@@ -19,13 +19,13 @@ describe("resolveTsconfigPath", () => {
       name: "undefined setting returns undefined",
       root: ROOT,
       setting: undefined,
-      expected: undefined,
+      expected: {},
     },
     {
       name: "empty string returns undefined",
       root: ROOT,
       setting: "",
-      expected: undefined,
+      expected: {},
     },
     {
       name: "relative path resolves against workspace root",
