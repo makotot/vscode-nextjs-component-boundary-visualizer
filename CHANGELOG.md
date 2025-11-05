@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.8.1
+
+### Patch Changes
+
+- 291a344: Improve extension activation time.
+
 ## 0.8.0
 
 ### Minor Changes
