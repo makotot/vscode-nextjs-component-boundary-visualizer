@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.8.2
+
+### Patch Changes
+
+- ebcb151: update component-env-graph to 0.1.11
+
 ## 0.8.1
 
 ### Patch Changes
