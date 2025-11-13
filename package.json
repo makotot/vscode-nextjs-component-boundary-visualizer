@@ -12,7 +12,7 @@
   ],
   "activationEvents": [
     "onLanguage:typescriptreact",
-    "workspaceContains:**/*.tsx"
+    "workspaceContains:**/tsconfig.json"
   ],
   "main": "./out/extension.js",
   "contributes": {

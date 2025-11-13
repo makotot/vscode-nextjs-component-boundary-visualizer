@@ -1,16 +1,19 @@
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
+import { isNextAppRouterProject } from "./core/isNextAppRouterProject/index.js";
 import { resolveTsconfigPath } from "./core/resolveTsConfigFilePath/index.js";
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
   if (!workspaceRoot) {
     return;
   }
-
-  initialize(context, workspaceRoot);
+  if (!isNextAppRouterProject(workspaceRoot)) {
+    return;
+  }
+  await initialize(context, workspaceRoot);
 }
 
 async function initialize(
