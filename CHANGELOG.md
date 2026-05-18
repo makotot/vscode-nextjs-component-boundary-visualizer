@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.9.0
+
+### Minor Changes
+
+- 4e2054b: Add end-of-line decoration (`🌐 Server component composed in Client`) for Server and Universal Components passed as props or children to a Client Component. This clarifies that these components execute on the server despite being visually nested inside a Client Component in JSX.
+
 ## 0.8.3
 
 ### Patch Changes
