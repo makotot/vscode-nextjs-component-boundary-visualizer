@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.9.1
+
+### Patch Changes
+
+- 02c472a: Shorten the Server in Client decoration label from `🌐 Server component composed in Client` to `🌐 Server in Client` to align with `⚡️ Client Boundary`. Also improves the hover message to better explain the RSC composition pattern.
+
 ## 0.9.0
 
 ### Minor Changes
