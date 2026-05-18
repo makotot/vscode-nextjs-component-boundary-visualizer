@@ -11,7 +11,7 @@ export class ComposedServerInClientDecorator {
     this.graph = graph;
     this.decorationType = vscode.window.createTextEditorDecorationType({
       after: {
-        contentText: "🌐 Server component composed in Client",
+        contentText: "🌐 Server in Client",
         margin: "0 0 0 4px",
         color: new vscode.ThemeColor("descriptionForeground"),
         fontStyle: "italic",
@@ -71,7 +71,7 @@ export class ComposedServerInClientDecorator {
           editor.document.lineAt(line).range.end,
           editor.document.lineAt(line).range.end
         ),
-        hoverMessage: `Server component composed in client: ${Array.from(tagNames).join(", ")}`,
+        hoverMessage: `Server component passed as props/children to a Client component — renders on the server despite appearing nested in JSX: ${Array.from(tagNames).join(", ")}`,
       }))
     );
   }

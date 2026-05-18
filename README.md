@@ -14,7 +14,7 @@
 
 ### Server Component Composition Markers
 
-<img src="assets/server-component-composed-in-client.png" alt="Server Component Composed in Client" width="800px">
+<img src="assets/server-in-client.png" alt="Server in Client" width="800px">
 
 **Extension ID:** `vscode-nextjs-component-boundary-visualizer`
 
@@ -28,7 +28,7 @@ You can install this extension by searching for "Next.js Component Boundary Visu
 - **Explorer Badges**: Shows icons for client(⚡️) and universal(♾️) components in the file explorer.
 - **Status Bar**: Displays the type of the currently open component (client, server, universal).
 - **JSX Client Boundary Markers**: shows a subdued end‑of‑line indicator (`⚡️ Client Boundary`) on lines that render Client Components across a server-to-client boundary.
-- **Server Component Composition Markers**: shows an end‑of‑line indicator (`🌐 Server component composed in Client`) on lines where a Server or Universal Component is passed as props or children to a Client Component. This clarifies that the component executes on the server despite being visually nested inside a Client Component in JSX.
+- **Server Component Composition Markers**: shows an end‑of‑line indicator (`🌐 Server in Client`) on lines where a Server or Universal Component is passed as props or children to a Client Component. This clarifies that the component executes on the server despite being visually nested inside a Client Component in JSX.
 - **Line Decorations**: Adds a colored line and icon to the editor for client and universal components.
 - **Automatic Updates**: Watches for file changes and updates the visualization in real time.
 
@@ -80,7 +80,7 @@ These icons represent the execution environment of a component file, appearing i
 These end‑of‑line markers appear on JSX lines to clarify execution environment relationships:
 
 - **Client Boundary** (`⚡️ Client Boundary`): A Client Component rendered from a Server Component context.
-- **Server Component Composition** (`🌐 Server component composed in Client`): A Server or Universal Component passed as props or children to a Client Component.
+- **Server in Client** (`🌐 Server in Client`): A Server or Universal Component passed as props or children to a Client Component — renders on the server despite appearing nested in JSX.
 
 Note: visual decorations are applied only to `.tsx` files (component files). Plain `.ts` files are analyzed for dependency/type classification but are not decorated.
 
