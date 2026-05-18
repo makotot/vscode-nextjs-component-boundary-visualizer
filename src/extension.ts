@@ -53,10 +53,15 @@ async function initialize(
       new ClientComponentLineDecorator(context, graph);
     }
 
-    const { JsxClientBoundaryLineDecorator } = await import(
-      "./ui/jsxClientBoundaryDecorator/index.js"
-    );
-    new JsxClientBoundaryLineDecorator(context, graph);
+    const [
+      { ServerToClientBoundaryDecorator },
+      { ComposedServerInClientDecorator },
+    ] = await Promise.all([
+      import("./ui/serverToClientBoundaryDecorator/index.js"),
+      import("./ui/composedServerInClientDecorator/index.js"),
+    ]);
+    new ServerToClientBoundaryDecorator(context, graph);
+    new ComposedServerInClientDecorator(context, graph);
 
     const watcher = vscode.workspace.createFileSystemWatcher("**/*.{ts,tsx}");
     const interval = 200;

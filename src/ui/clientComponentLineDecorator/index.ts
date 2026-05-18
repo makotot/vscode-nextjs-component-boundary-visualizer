@@ -1,7 +1,7 @@
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { typeIcon } from "../typeIcon/index.js";
+import { componentEnvIcon } from "../componentEnvIcon/index.js";
 
 export class ClientComponentLineDecorator {
   private readonly graph: ComponentEnvGraph;
@@ -49,7 +49,7 @@ export class ClientComponentLineDecorator {
         isWholeLine: true,
         backgroundColor: "rgba(128,0,128,0.08)", // light purple
         before: {
-          contentText: typeIcon.client,
+          contentText: componentEnvIcon.client,
           color: "#a259ff",
           margin: "0 8px 0 0",
           fontWeight: "bold",
@@ -65,7 +65,7 @@ export class ClientComponentLineDecorator {
         isWholeLine: true,
         backgroundColor: "rgba(0, 120, 212, 0.08)", // light blue
         before: {
-          contentText: typeIcon.universal,
+          contentText: componentEnvIcon.universal,
           color: "#0078d4",
           margin: "0 8px 0 0",
           fontWeight: "bold",
