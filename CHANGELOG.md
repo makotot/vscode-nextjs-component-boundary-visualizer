@@ -1,5 +1,11 @@
 # vscode-nextjs-component-boundary-visualizer
 
+## 0.8.3
+
+### Patch Changes
+
+- 5ee7f01: Silently ignore initialization errors for non-Next.js projects. Errors are still shown when a `next.config.*` file is present.
+
 ## 0.8.2
 
 ### Patch Changes
