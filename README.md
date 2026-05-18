@@ -14,7 +14,7 @@
 
 ### Server Component Composition Markers
 
-<img src="assets/server-component-composed-in-client.png" alt="Server Component Composed in Client" width="800px">
+<img src="assets/server-in-client.png" alt="Server in Client" width="800px">
 
 **Extension ID:** `vscode-nextjs-component-boundary-visualizer`
 
