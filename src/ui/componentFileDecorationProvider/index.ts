@@ -3,7 +3,7 @@ import * as path from "node:path";
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { typeIcon } from "../typeIcon/index.js";
+import { componentEnvIcon } from "../componentEnvIcon/index.js";
 
 export class ComponentFileDecorationProvider
   implements vscode.FileDecorationProvider
@@ -37,14 +37,14 @@ export class ComponentFileDecorationProvider
     }
     if (node.type === "client") {
       return {
-        badge: typeIcon.client,
+        badge: componentEnvIcon.client,
         tooltip: "Client Component",
         propagate: true,
       };
     }
     if (node.type === "universal") {
       return {
-        badge: typeIcon.universal,
+        badge: componentEnvIcon.universal,
         tooltip: "Shared Component",
         propagate: true,
       };

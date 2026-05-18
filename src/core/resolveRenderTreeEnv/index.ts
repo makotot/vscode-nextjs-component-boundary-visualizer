@@ -4,12 +4,16 @@ import type {
 } from "@makotot/component-env-graph";
 import { SyntaxKind } from "ts-morph";
 
-export type BoundaryResult = {
+export type RenderTreeEnvRole =
+  | "server-to-client-boundary"
+  | "composed-server-in-client";
+
+export type RenderTreeEnvResult = {
   range: [number, number];
   tagName: string;
   componentFile?: string;
   componentEnv?: ComponentType;
-  boundary?: boolean;
+  role?: RenderTreeEnvRole;
 };
 
 type FilePathLike = string | { toString(): string };
@@ -20,24 +24,23 @@ type SymbolLike = {
   getDeclarations?: () => readonly DeclarationLike[] | undefined;
 };
 type TagLike = { getSymbol?: () => SymbolLike | undefined };
+type AncestorNode = {
+  getKind: () => SyntaxKind;
+  getOpeningElement?: () => { getTagNameNode: () => TagLike };
+  getTagNameNode?: () => TagLike;
+};
 
-/**
- * Resolves the JSX client boundary for a given file.
- * @param graph - The component environment graph.
- * @param filePath - The path to the file to resolve.
- * @returns An array of boundary results.
- */
-export function resolveJsxClientBoundary(
+export function resolveRenderTreeEnv(
   graph: ComponentEnvGraph,
   filePath: string
-): BoundaryResult[] {
+): RenderTreeEnvResult[] {
   const sourceFile = graph.project.getSourceFile(filePath);
   if (!sourceFile) {
     return [];
   }
 
   const targetFileComponentEnv = graph.nodes.get(filePath)?.type;
-  const results: BoundaryResult[] = [];
+  const results: RenderTreeEnvResult[] = [];
 
   const openings = sourceFile.getDescendantsOfKind(
     SyntaxKind.JsxOpeningElement
@@ -60,21 +63,19 @@ export function resolveJsxClientBoundary(
 
     const componentFile = resolveTagToFile(graph, tag);
     if (!componentFile) {
-      results.push({ range, tagName, boundary: false });
+      results.push({ range, tagName });
       continue;
     }
 
     const componentEnv = graph.nodes.get(componentFile)?.type;
-    const boundary = !!(
-      targetFileComponentEnv !== "client" && componentEnv === "client"
-    );
+    const role = resolveRole(targetFileComponentEnv, componentEnv, graph, node);
 
-    const item: BoundaryResult = { range, tagName, boundary };
-    if (componentFile) {
-      item.componentFile = componentFile;
-    }
+    const item: RenderTreeEnvResult = { range, tagName, componentFile };
     if (componentEnv) {
       item.componentEnv = componentEnv;
+    }
+    if (role) {
+      item.role = role;
     }
     results.push(item);
   }
@@ -83,30 +84,76 @@ export function resolveJsxClientBoundary(
 }
 
 const INTRINSIC_TAG_REGEX = /^[a-z]/;
-/**
- * Resolves an intrinsic element. ex: <div />, <span />
- * @param range - The range of the element.
- * @param tagName - The name of the element.
- * @returns The resolved intrinsic element or undefined.
- */
+
 function resolveIntrinsicElement(
   range: [number, number],
   tagName: string
-): BoundaryResult | undefined {
+): RenderTreeEnvResult | undefined {
   if (INTRINSIC_TAG_REGEX.test(tagName)) {
     return { range, tagName };
   }
   return;
 }
 
-/**
- * Resolves a JSX tag node to a project file path if possible.
- * Obtains the tag's symbol and delegates to resolveSymbolToFile.
- *
- * @param graph - The component environment graph.
- * @param tag - The JSX tag node.
- * @returns The resolved file path or undefined if cannot be resolved as a project file.
- */
+type NodeLike = {
+  getKind: () => SyntaxKind;
+  getParent: () => { getAncestors: () => AncestorNode[] };
+  getAncestors: () => AncestorNode[];
+};
+
+function resolveRole(
+  targetFileComponentEnv: ComponentType | undefined,
+  componentEnv: ComponentType | undefined,
+  graph: ComponentEnvGraph,
+  node: NodeLike
+): RenderTreeEnvRole | undefined {
+  if (targetFileComponentEnv !== "client" && componentEnv === "client") {
+    return "server-to-client-boundary";
+  }
+  if (componentEnv !== "client" && isComposedInClientComponent(graph, node)) {
+    return "composed-server-in-client";
+  }
+}
+
+function isComposedInClientComponent(
+  graph: ComponentEnvGraph,
+  node: NodeLike
+): boolean {
+  // For JsxOpeningElement, start from the parent JsxElement to avoid matching itself
+  const ancestors =
+    node.getKind() === SyntaxKind.JsxOpeningElement
+      ? node.getParent().getAncestors()
+      : node.getAncestors();
+
+  for (const ancestor of ancestors) {
+    let tag: TagLike | undefined;
+    if (ancestor.getKind() === SyntaxKind.JsxElement) {
+      tag = ancestor.getOpeningElement?.().getTagNameNode();
+    } else if (ancestor.getKind() === SyntaxKind.JsxSelfClosingElement) {
+      tag = ancestor.getTagNameNode?.();
+    }
+
+    if (!tag) {
+      continue;
+    }
+
+    const file = resolveTagToFile(graph, tag);
+    if (!file) {
+      // Intrinsic or unresolvable — skip and continue up
+      continue;
+    }
+
+    const env = graph.nodes.get(file)?.type;
+    if (env === "client") {
+      return true;
+    }
+    // Nearest resolvable ancestor is server/universal — not composed in client
+    return false;
+  }
+
+  return false;
+}
+
 function resolveTagToFile(
   graph: ComponentEnvGraph,
   tag: TagLike
@@ -118,10 +165,6 @@ function resolveTagToFile(
   return resolveSymbolToFile(graph, symbol);
 }
 
-/**
- * Resolves a symbol (following import aliases) to a project file path.
- * Prefers the aliased symbol's declarations, then falls back to own declarations.
- */
 function resolveSymbolToFile(
   graph: ComponentEnvGraph,
   symbol: SymbolLike | undefined
@@ -136,10 +179,6 @@ function resolveSymbolToFile(
   return getFirstKnownDeclPath(graph, symbol?.getDeclarations?.());
 }
 
-/**
- * From a list of declarations, returns the first file path that is inside the project graph
- * (non-node_modules and present in graph.nodes).
- */
 function getFirstKnownDeclPath(
   graph: ComponentEnvGraph,
   decls: readonly DeclarationLike[] | undefined

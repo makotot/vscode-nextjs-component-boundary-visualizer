@@ -1,6 +1,6 @@
 # Next.js Component Boundary Visualizer
 
-> Visualizes server, client, and universal components with explorer badges, status bar indicators, editor decorations, and JSX client boundary markers in Next.js App Router projects.
+> Visualizes server, client, and universal components with explorer badges, status bar indicators, editor decorations, JSX client boundary markers, and server component composition markers in Next.js App Router projects.
 
 ## Screenshots
 
@@ -10,7 +10,11 @@
 
 ### JSX Client Boundary Markers
 
-## <img src="assets/screenshot-client-boundary.png" alt="JSX Client Boundary" width="800px">
+<img src="assets/screenshot-client-boundary.png" alt="JSX Client Boundary" width="800px">
+
+### Server Component Composition Markers
+
+<img src="assets/server-component-composed-in-client.png" alt="Server Component Composed in Client" width="800px">
 
 **Extension ID:** `vscode-nextjs-component-boundary-visualizer`
 
@@ -23,7 +27,8 @@ You can install this extension by searching for "Next.js Component Boundary Visu
 - **High‑precision static analysis**: Infers server, client, and universal(shared) components using the TypeScript type checker and a dependency graph.
 - **Explorer Badges**: Shows icons for client(⚡️) and universal(♾️) components in the file explorer.
 - **Status Bar**: Displays the type of the currently open component (client, server, universal).
-- **JSX Client Boundary Markers**: shows a subdued end‑of‑line indicator (⚡️) on lines that render Client Components across a boundary.
+- **JSX Client Boundary Markers**: shows a subdued end‑of‑line indicator (`⚡️ Client Boundary`) on lines that render Client Components across a server-to-client boundary.
+- **Server Component Composition Markers**: shows an end‑of‑line indicator (`🌐 Server component composed in Client`) on lines where a Server or Universal Component is passed as props or children to a Client Component. This clarifies that the component executes on the server despite being visually nested inside a Client Component in JSX.
 - **Line Decorations**: Adds a colored line and icon to the editor for client and universal components.
 - **Automatic Updates**: Watches for file changes and updates the visualization in real time.
 
@@ -62,11 +67,22 @@ If your `tsconfig.json` is not at the project root, set the path in your VS Code
 
 ## Icons
 
+### Component Environment Icons
+
+These icons represent the execution environment of a component file, appearing in the file explorer, status bar, and as line decorations:
+
 - **Client Component**: `⚡️`
 - **Universal Component**: `♾️`
-- **Server Component**: No icon (server components do not display a badge or icon)
+- **Server Component**: No icon (server components are the default in Next.js App Router and do not display a badge)
 
-These icons appear in the file explorer, status bar, and as line decorations in the editor to help you quickly distinguish component types. Note: visual decorations are applied only to `.tsx` files (component files). Plain `.ts` files are analyzed for dependency/type classification but are not decorated.
+### JSX Render Tree Markers
+
+These end‑of‑line markers appear on JSX lines to clarify execution environment relationships:
+
+- **Client Boundary** (`⚡️ Client Boundary`): A Client Component rendered from a Server Component context.
+- **Server Component Composition** (`🌐 Server component composed in Client`): A Server or Universal Component passed as props or children to a Client Component.
+
+Note: visual decorations are applied only to `.tsx` files (component files). Plain `.ts` files are analyzed for dependency/type classification but are not decorated.
 
 ## Known Issues
 

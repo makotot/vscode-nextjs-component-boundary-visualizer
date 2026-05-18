@@ -1,7 +1,7 @@
 import type { ComponentEnvGraph } from "@makotot/component-env-graph";
 // biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
 import * as vscode from "vscode";
-import { typeIcon } from "../typeIcon/index.js";
+import { componentEnvIcon } from "../componentEnvIcon/index.js";
 
 // Returns display info for each file type (status bar)
 function getStatusBarDisplayForNode(node: { type?: string } | undefined):
@@ -16,7 +16,7 @@ function getStatusBarDisplayForNode(node: { type?: string } | undefined):
   switch (node.type) {
     case "client":
       return {
-        text: `${typeIcon.client} Client Component`,
+        text: `${componentEnvIcon.client} Client Component`,
         tooltip: "This file is a Next.js Client Component",
       };
     case "server":
@@ -26,7 +26,7 @@ function getStatusBarDisplayForNode(node: { type?: string } | undefined):
       };
     case "universal":
       return {
-        text: `${typeIcon.universal} Universal Component`,
+        text: `${componentEnvIcon.universal} Universal Component`,
         tooltip:
           "This file is a Universal Component (can be used as both Client and Server Component in Next.js)",
       };
