@@ -1,9 +1,9 @@
-// biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
-import * as vscode from "vscode";
 // biome-ignore lint/performance/noNamespaceImport: node:fs cannot import with default import
 import * as fs from "node:fs";
 // biome-ignore lint/performance/noNamespaceImport: node:path cannot import with default import
 import * as path from "node:path";
+// biome-ignore lint/performance/noNamespaceImport: vscode cannot import with default import
+import * as vscode from "vscode";
 import { resolveTsconfigPath } from "./core/resolveTsConfigFilePath/index.js";
 
 // This method is called when your extension is activated
@@ -74,11 +74,18 @@ async function initialize(
     );
     graph.onDidUpdate(() => decorationProvider.refresh());
   } catch (err) {
-    const hasNextConfig = ["next.config.js", "next.config.ts", "next.config.mjs", "next.config.cjs"]
-      .some((f) => fs.existsSync(path.join(workspaceRoot, f)));
+    const hasNextConfig = [
+      "next.config.js",
+      "next.config.ts",
+      "next.config.mjs",
+      "next.config.cjs",
+    ].some((f) => fs.existsSync(path.join(workspaceRoot, f)));
     if (hasNextConfig) {
-      const message = err instanceof Error ? err.message : "Initialization failed";
-      vscode.window.showErrorMessage(`Next.js Component Boundary Visualizer: ${message}`);
+      const message =
+        err instanceof Error ? err.message : "Initialization failed";
+      vscode.window.showErrorMessage(
+        `Next.js Component Boundary Visualizer: ${message}`
+      );
     }
   }
 }
